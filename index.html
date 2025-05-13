@@ -1136,10 +1136,10 @@
             <div class="section-header">
                 <h2 class="section-titlel">Свяжитесь с нами</h2>
             </div>
-            <form class="contact-form" id="contactForm">
+            <form action="telegram.php" method="POST" class="contact-form" id="contactForm">
                 <div class="form-group">
                     <label for="name">Ваше имя</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required>  
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -1173,7 +1173,7 @@
                     <label for="message">Сообщение</label>
                     <textarea id="message" name="message" required></textarea>
                 </div>
-                <button type="submit" class="btn">Отправить запрос</button>
+                <button type="submit" onclick="return gtag_report_conversion" class="btn">Отправить запрос</button>
             </form>
         </div>
     </div>
@@ -1621,6 +1621,7 @@
         this.reset();
         document.getElementById('contactPopup').classList.remove('active');
     });
+    
 
     </script>
 </body>
