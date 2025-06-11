@@ -29,7 +29,8 @@
             padding: 5px 0;
             position: fixed;
             width: 100%;
-            height: 100px;
+            height: auto;
+            min-height: 70px;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
@@ -43,6 +44,15 @@
         position: relative;
         display: inline-block;
         padding-bottom: 10px;
+        text-align: left;
+        text-transform: uppercase;
+        display: block;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        unicode-bidi: isolate;
         }
         
         .header-container {
@@ -172,7 +182,7 @@
     .services{
         background-color: #3B2B2A;
         min-height: 93vh;
-        padding: 80px 0;
+        padding: 1px 0;
     }
     .section-header {
     text-align: center;
@@ -181,9 +191,9 @@
     
     .services-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 40px;
-        padding: 20px 0;
+        padding: 0px 0;
     }
     
     .service-card {
@@ -664,11 +674,14 @@
             }
         }
         .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            transition: opacity 0.3s;
         }
         
         .logo:hover {
@@ -676,7 +689,7 @@
         }
         
         .logo-img {
-            height: 100px;
+            height: 70px;
             width: auto;
         }
         
@@ -687,7 +700,7 @@
             text-transform: uppercase;
         }
         .advantages {
-            padding: 80px 0;
+            padding: 0px 0;
             background-color: #5E5858;
         }
         
@@ -1107,9 +1120,10 @@
                 <div class="footer-section">
                     <h3>Соцсети</h3>
                     <div class="social-icons">
-                        <a href="https://vk.com/zvukpodkluch?t2fs=01cdc6cbb572e7546e_3" target="_blank">
+                        <a href="https://vk.com/s_event_rental?from=groups" target="_blank">
                             <i class="fab fa-vk"></i>
                         </a>
+                        <a href="#"><i class="fab fa-instagram">*</i></a>
                     </div>
                 </div>
             </div>
