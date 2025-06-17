@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S-event - Аренда профессионального оборудования</title>
+  <link rel="icon" href="img/logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/logo.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+         * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+        }
+    
+        body {
+        color: #000000;
+        line-height: 1.6;
+        background-color: #f9f9f9;
+        padding-top: 70px; /* Отступ для фиксированной шапки */
+        background-color: #5E5858;
+        }
+        
+        
+        /* Стили для карточек товаров */
+        .prod-col {
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .product-bg {
+            height: 200px;
+            width: 250px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            background-color: #f5f5f5;
+        }
+        
+        .s-black::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
+            border-radius: 4px;
+        }
+        
+        .new-prod-head {
+            position: relative;
+            width: 100%;
+            padding: 15px;
+            z-index: 1;
+        }
+        
+        .brand-in {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .new-prod-title {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1.3;
+        }
+        
+        .product-bg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Секции с оборудованием */
+        .section-title {
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 767px) {
+            body {
+                padding-top: 60px;
+            }
+            
+            .nav {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background-color: #000;
+                flex-direction: column;
+                padding: 20px;
+                transition: left 0.3s;
+            }
+            
+            .nav.active {
+                left: 0;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+            }
+            
+            .nav-item {
+                margin: 15px 0;
+            }
+            
+            .dropdown-menu {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding-left: 20px;
+                background-color: transparent;
+                transition: none;
+            }
+            
+            .dropdown-menu.active {
+                max-height: 0;
+                opacity: 1;
+            }
+            
+            .dropdown-menu.active.show {
+                max-height: 500px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .prod-col {
+                padding: 5px;
+            }
+            
+            .product-bg {
+                height: 150px;
+            }
+        }
+        .row-flex-wrap {
+         display: flex;
+        flex-wrap: wrap;
+         margin-right: -10px;
+            margin-left: -10px;
+        }
+
+        .prod-col {
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 767px) {
+        .prod-col {
+        padding: 5px;
+        }
+        }
+        footer {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            margin: 0 10px;
+            transition: transform 0.3s;
+        }
+        
+        .social-icons a:hover {
+            transform: scale(1.1);
+        }
+        
+        .social-icons img {
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+    </style>
+</head>
+<body>
+    <style>
+        
+        /* Шапка */
+        .header {
+            background-color: #000;
+            color: white;
+            padding: 5px 0;
+            position: fixed;
+            width: 100%;
+            height: auto;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo:hover {
+            opacity: 0.8;
+        }
+        
+        .logo-img {
+            height: 70px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+        }
+        
+        .nav {
+            display: flex;
+        }
+        
+        .nav-list {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-family: 'Impact Regular';
+        }
+        
+        .nav-link:hover {
+            color: #ccc;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        
+        /* Выпадающее меню */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #000;
+            min-width: 200px;
+            padding: 10px 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.3s ease;
+            opacity: 0;
+            z-index: 100;
+        }
+        
+        .dropdown-menu.active {
+            max-height: 500px;
+            opacity: 1;
+            transition: max-height 0.5s ease-in, opacity 0.3s ease 0.2s;
+        }
+        
+        .dropdown-item {
+            padding: 8px 20px;
+        }
+        
+        .dropdown-link {
+            color: white;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+            font-family: 'Bebas Neue Bold';
+        }
+        
+        .dropdown-link:hover {
+            background-color: #333;
+        }
+        
+        /* Анимация иконки */
+        .nav-item.active .dropdown-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Мобильное меню */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+            
+            .nav {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background-color: #000;
+                flex-direction: column;
+                padding: 20px;
+                transition: left 0.3s;
+            }
+            
+            .nav.active {
+                left: 0;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+            }
+            
+            .nav-item {
+                margin: 15px 0;
+            }
+            
+            .dropdown-menu {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding-left: 20px;
+                background-color: transparent;
+                transition: none;
+            }
+            
+            .dropdown-menu.active {
+                max-height: 0;
+                opacity: 1;
+            }
+            
+            .dropdown-menu.active.show {
+                max-height: 500px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        .container-fluid {
+        padding-right: 15px !important;
+        padding-left: 55px !important;
+    }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Звук под ключ" class="logo-img">
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Проекты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Услуги</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-link dropdown-toggle">Оборудование <i class="fas fa-chevron-down dropdown-icon"></i></div>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item"><a href="arenda.html" class="dropdown-link">Звуковое</a></li>
+                            <li class="dropdown-item"><a href="svet.html" class="dropdown-link">Световое</a></li>
+                            <li class="dropdown-item"><a href="led.html" class="dropdown-link">Видео</a></li>
+                            <li class="dropdown-item"><a href="#" class="dropdown-link">Сценическое</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">О компании</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Контакты</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Обработка выпадающих меню
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentItem = this.parentElement;
+                const dropdownMenu = this.nextElementSibling;
+                
+                // Закрываем все открытые меню
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    if (menu !== dropdownMenu) {
+                        menu.classList.remove('active');
+                        menu.previousElementSibling.parentElement.classList.remove('active');
+                    }
+                });
+                
+                // Переключаем текущее меню
+                parentItem.classList.toggle('active');
+                dropdownMenu.classList.toggle('active');
+                
+                // Для мобильной версии
+                if (window.innerWidth <= 768) {
+                    dropdownMenu.classList.toggle('show');
+                }
+            });
+        });
+        
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.nav-item')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('active');
+                    menu.previousElementSibling.parentElement.classList.remove('active');
+                });
+            }
+        });
+        
+        // Мобильное меню
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('.nav');
+        
+        menuToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+    </script>
+         <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-1 col-sm-1 none-mob"></div>
+                <div class="col-sm-10 col-md-10 col-xs-12">
+                    
+                    <section id="acoustic-systems">
+                        <h2 class="section-title">LED Экран</h2>
+                        <div class="row row-flex-wrap">
+                            <!-- Карточка 1 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/1.\ LED\ Экран/помещения/Absen.png');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Для помещения</div>
+                                            <div class="title new-prod-title">Absen A3 Pro P3.91</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Карточка 2 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/1.\ LED\ Экран/улицы/Gloshine.png');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Для улицы</div>
+                                            <div class="title new-prod-title">Gloshine  Beyonder P3.91</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Карточка 3 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/1.\ LED\ Экран/улицы/LedStar.jpg');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Для улицы</div>
+                                            <div class="title new-prod-title">LedStar p6 (1)</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                    </section>
+                    
+                    <section id="amplifiers">
+                        <h2 class="section-title">Процессоры и отправные карты</h2>
+                        <div class="row row-flex-wrap">
+                            <!-- Карточка 1 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/2.\ Процессоры\ и\ отправные\ карты/Amoonsky.png');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Процессор</div>
+                                            <div class="title new-prod-title">Amoonsky AMS-LVP915</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Карточка 2 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/2.\ Процессоры\ и\ отправные\ карты/LVP605S.png');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Процессор</div>
+                                            <div class="title new-prod-title">LVP605S</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Карточка 3 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/2.\ Процессоры\ и\ отправные\ карты/Novastar.png');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Процессор</div>
+                                            <div class="title new-prod-title">Novastar VX1000</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                <div class="s-black product-bg" style="background-image: url('img/Экран/2.\ Процессоры\ и\ отправные\ карты/Novastar2.png');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Отправная карта</div>
+                                        <div class="title new-prod-title">Novastar MCTRL300</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                      
+                    </section>
+                    
+                    <section id="consoles">
+                        <h2 class="section-title">Конверторы</h2>
+                    
+                        <div class="row row-flex-wrap">
+                            <!-- Карточка 1 -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                                    <div class="s-black product-bg" style="background-image: url('img/Экран/3.\ Конверторы/CVT10-S.jpg');">
+                                        <div class="new-prod-head">
+                                            <div class="brand-in">Оптоволоконный конвертер</div>
+                                            <div class="title new-prod-title">CVT10-S</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                    </section>
+                    
+                    
+                </div>
+                <div class="col-lg-1 col-sm-1 none-mob"></div>
+            </div>
+        </div>    
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>Контакты</h3>
+                        <p>Уфа, Ленина 70</p>
+                        <p>+7 (993) 068-58-05</p>
+                        <p>S7t.pro@yandex.ru</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Соцсети</h3>
+                        <div class="social-icons">
+                            <a href="https://vk.com/zvukpodkluch?t2fs=01cdc6cbb572e7546e_3" target="_blank">
+                                <i class="fab fa-vk"></i>
+                                <a href="#"><i class="fab fa-instagram">*</i></a>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="copyright">
+                </div>
+            </div>
+        </footer>
+</body>
+</html>
