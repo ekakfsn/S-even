@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S-event - Аренда профессионального оборудования</title>
+  <link rel="icon" href="img/logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="img/logo.jpg">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/pop.css">
+    <style>
+          * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+        }
+    
+        body {
+        color: #000000;
+        line-height: 1.6;
+        background-color: #f9f9f9;
+        padding-top: 70px; /* Отступ для фиксированной шапки */
+        }
+        
+        
+        /* Стили для карточек товаров */
+        .prod-col {
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .product-bg {
+            height: 200px;
+            width: 250px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            background-color: #f5f5f5;
+        }
+        
+        .s-black::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
+            border-radius: 4px;
+        }
+        
+        .new-prod-head {
+            position: relative;
+            width: 100%;
+            padding: 15px;
+            z-index: 1;
+        }
+        
+        .brand-in {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .new-prod-title {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1.3;
+        }
+        
+        .product-bg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Секции с оборудованием */
+        .section-title {
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 767px) {
+            body {
+                padding-top: 60px;
+            }
+            
+            .nav {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 60px);
+                background-color: #000;
+                flex-direction: column;
+                padding: 20px;
+                transition: left 0.3s;
+            }
+            
+            .nav.active {
+                left: 0;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+            }
+            
+            .nav-item {
+                margin: 15px 0;
+            }
+            
+            .dropdown-menu {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding-left: 20px;
+                background-color: transparent;
+                transition: none;
+            }
+            
+            .dropdown-menu.active {
+                max-height: 0;
+                opacity: 1;
+            }
+            
+            .dropdown-menu.active.show {
+                max-height: 500px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .prod-col {
+                padding: 5px;
+            }
+            
+            .product-bg {
+                height: 150px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+    <body>
+      <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Звук под ключ" class="logo-img">
+            </a>
+        
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Проекты</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Услуги</a>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link dropdown-toggle">Оборудование <i class="fas fa-chevron-down dropdown-icon"></i></div>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item"><a href="#" class="dropdown-link">Звуковое</a></li>
+                        <li class="dropdown-item"><a href="#" class="dropdown-link">Световое</a></li>
+                        <li class="dropdown-item"><a href="#" class="dropdown-link">Сценическое</a></li>
+                        <li class="dropdown-item"><a href="#" class="dropdown-link">Видео</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">О компании</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Контакты</a>
+                </li>
+            </ul>
+        </nav>
+        
+    </div>
+</header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Обработка выпадающих меню
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const parentItem = this.parentElement;
+            const dropdownMenu = this.nextElementSibling;
+                            
+            // Закрываем все открытые меню
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if (menu !== dropdownMenu) {
+                    menu.classList.remove('active');
+                    menu.previousElementSibling.parentElement.classList.remove('active');
+                }
+            });
+                            
+            // Переключаем текущее меню
+            parentItem.classList.toggle('active');
+            dropdownMenu.classList.toggle('active');
+                            
+            // Для мобильной версии
+            if (window.innerWidth <= 768) {
+                dropdownMenu.classList.toggle('show');
+            }
+        });
+    });
+    
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.nav-item')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('active');
+                menu.previousElementSibling.parentElement.classList.remove('active');
+            });
+        }
+    });
+    
+    // Мобильное меню
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('.nav');
+});
+</script>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1 col-sm-1 none-mob"></div>
+            <div class="col-sm-10 col-md-10 col-xs-12">
+                
+                <section id="acoustic-systems">
+                    <h2 class="section-title">Акустическая система</h2>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/1 акустические системы/Линейный.png');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Линейный массив</div>
+                                        <div class="title new-prod-title">L'acoustics Kara</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 2 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/1 акустические системы/Линейный2.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Линейный массив</div>
+                                        <div class="title new-prod-title">L'acoustics Kudo</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 3 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/1 акустические системы/Линейный3.png');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Линейный массив</div>
+                                        <div class="title new-prod-title">Nexo Geo S12</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 4 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/1 акустические системы/Сабвуфер1.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Сабвуфер</div>
+                                        <div class="title new-prod-title">L-Acoustics-SB28</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 5 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/1 акустические системы/Сабвуфер3.png');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Сабвуфер</div>
+                                        <div class="title new-prod-title">Nexo LS18</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 6 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/1 акустические системы/Сабвуфер2.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Сабвуфер</div>
+                                        <div class="title new-prod-title">Nexo RS18</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                </section>
+                
+                <section id="amplifiers">
+                    <h2 class="section-title">Усилители</h2>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/2\ Усилители/Усилитель1.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Усилитель</div>
+                                        <div class="title new-prod-title">L'acoustics LA8</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 2 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/2\ Усилители/Усилитель2.png');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Усилитель</div>
+                                        <div class="title new-prod-title">Nexo Nxamp 4x2 mk2</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 3 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/2\ Усилители/Усилитель3.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Усилитель</div>
+                                        <div class="title new-prod-title">Nexo Nxamp 4x4</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                  
+                </section>
+                
+                <section id="consoles">
+                    <h2 class="section-title">Пульты</h2>
+                    
+                    <h3>Behringer wing</h3>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Behringer/Behringer1.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Пульт</div>
+                                        <div class="title new-prod-title">Behringer Wing</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 2 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Behringer/s32.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">стейдж</div>
+                                        <div class="title new-prod-title">s32</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <h3>Behringer x32</h3>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Behringerx32/x322.webp');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Пульт</div>
+                                        <div class="title new-prod-title">Behringer x32</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 2 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Behringerx32/s32.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">стейдж</div>
+                                        <div class="title new-prod-title">s32</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <h3>Dlive</h3>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Dlive/Allen.jpeg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Пульт</div>
+                                        <div class="title new-prod-title">Allen Heath Dlive C3500</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 2 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Dlive/CDM64.webp');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">стейдж</div>
+                                        <div class="title new-prod-title">Allen Heath Dlive CDM64</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <h3>Yamaha cl5</h3>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Yamaha/YamahaCL52.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Пульт</div>
+                                        <div class="title new-prod-title">Yamaha CL5</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        <!-- Карточка 2 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/Yamaha/Yamaha RiO3224 d2.webp');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">стейдж</div>
+                                        <div class="title new-prod-title">Yamaha RiO3224 d2</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <h3>Yamaha DM3</h3>
+                    <div class="row row-flex-wrap">
+                        <!-- Карточка 1 -->
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                            <a href="#">
+                                <div class="s-black product-bg" style="background-image: url('img/Звук/3\ Пульты/DM3/Yamaha DM3 1.jpg');">
+                                    <div class="new-prod-head">
+                                        <div class="brand-in">Пульт</div>
+                                        <div class="title new-prod-title">Yamaha DM3</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <section id="acoustic-systems">
+                  <h2 class="section-title">Радиомикрофоны</h2>
+                  <div class="row row-flex-wrap">
+                      <!-- Карточка 1 -->
+                      <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                          <a href="#">
+                              <div class="s-black product-bg" style="background-image: url('img/Звук/4\ Радиомикрофоны/Sennheiser ew300 G3.jpg');">
+                                  <div class="new-prod-head">
+                                      <div class="brand-in">Sennheiser</div>
+                                      <div class="title new-prod-title">ew300 G3</div>
+                                  </div>
+                              </div>
+                          </a>
+                      </div>
+                      
+                      <!-- Карточка 2 -->
+                      <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                          <a href="#">
+                              <div class="s-black product-bg" style="background-image: url('img/Звук/4\ Радиомикрофоны/Shure Axient.jpg');">
+                                  <div class="new-prod-head">
+                                      <div class="brand-in">Shure</div>
+                                      <div class="title new-prod-title">Axient</div>
+                                  </div>
+                              </div>
+                          </a>
+                      </div>
+                      
+                      <!-- Карточка 3 -->
+                      <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                          <a href="#">
+                              <div class="s-black product-bg" style="background-image: url('img/Звук/4\ Радиомикрофоны/Shure QLXD.webp');">
+                                  <div class="new-prod-head">
+                                      <div class="brand-in">Shure</div>
+                                      <div class="title new-prod-title">QLXD</div>
+                                  </div>
+                              </div>
+                          </a>
+                      </div>
+                      
+                      <!-- Карточка 4 -->
+                      <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                          <a href="#">
+                              <div class="s-black product-bg" style="background-image: url('img/Звук/4\ Радиомикрофоны/Shure SLXD .webp');">
+                                  <div class="new-prod-head">
+                                      <div class="brand-in">Shure</div>
+                                      <div class="title new-prod-title">SLXD</div>
+                                  </div>
+                              </div>
+                          </a>
+                      </div>
+                      
+                      <!-- Карточка 5 -->
+                      <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                          <a href="#">
+                              <div class="s-black product-bg" style="background-image: url('img/Звук/4\ Радиомикрофоны/Shure ULXD.jpg');">
+                                  <div class="new-prod-head">
+                                      <div class="brand-in">Shure</div>
+                                      <div class="title new-prod-title">ULXD</div>
+                                  </div>
+                              </div>
+                          </a>
+                      </div>
+              </section>
+              <section id="acoustic-systems">
+                <h2 class="section-title">Инейры</h2>
+                <div class="row row-flex-wrap">
+                    <!-- Карточка 1 -->
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                        <a href="#">
+                            <div class="s-black product-bg" style="background-image: url('img/Звук/Инейры/Sennheiser\ G3\ InEar\ 3\ вариант.webp');">
+                                <div class="new-prod-head">
+                                    <div class="brand-in">Sennheiser</div>
+                                    <div class="title new-prod-title">G3 InEar</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Карточка 2 -->
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                        <a href="#">
+                            <div class="s-black product-bg" style="background-image: url('img/Звук/Инейры/Беспроводные\ системы\ ушного\ мониторинга\ Shure\ PSM1000\ 1\ вариант\ .webp');">
+                                <div class="new-prod-head">
+                                    <div class="brand-in">Shure</div>
+                                    <div class="title new-prod-title">PSM1000</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Карточка 3 -->
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                        <a href="#">
+                            <div class="s-black product-bg" style="background-image: url('img/Звук/Инейры/Беспроводные\ системы\ ушного\ мониторинга\ Shure\ PSM900.webp');">
+                                <div class="new-prod-head">
+                                    <div class="brand-in">Shure</div>
+                                    <div class="title new-prod-title">PSM900</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+            </section>
+            <section id="consoles">
+              <h2 class="section-title">Музыкальные инструменты</h2>
+              
+              <h3>Nord Stage</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Nord/Nord_Stage4_corner.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Nord Stage 4</div>
+                                  <div class="title new-prod-title">Corner</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+                  
+                  <!-- Карточка 2 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Nord/Nord_Stage4_Drawbars_1.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Nord Stage 4</div>
+                                  <div class="title new-prod-title">Drawbars</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                    <a href="#">
+                        <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Nord/NordStage4.jpg');">
+                            <div class="new-prod-head">
+                                <div class="brand-in">Nord Stage 4</div>
+                                <div class="title new-prod-title"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                  <a href="#">
+                      <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Nord/NS4_HA88_Effects-01_231020.jpg');">
+                          <div class="new-prod-head">
+                              <div class="brand-in">Nord Stage 4</div>
+                              <div class="title new-prod-title">NS4 HA88 Effects</div>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+              <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                <a href="#">
+                    <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Nord/NS4_HA88_Synth-01_241008.jpg');">
+                        <div class="new-prod-head">
+                            <div class="brand-in">Nord Stage 4</div>
+                            <div class="title new-prod-title">NS4 HA88 Synth</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+              </div>
+              
+              <h3>Tama StarClassic</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Tama/IMG_2196.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Tama</div>
+                                  <div class="title new-prod-title">StarClassic</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+
+              <h3>Yamaha OAK Custom</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Yamaha1/IMG_1004 2.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Yamaha</div>
+                                  <div class="title new-prod-title">OAK Custom</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+              <h3>Yamaha Stage Custom</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Yamaha2/IMG_7937.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Yamaha</div>
+                                  <div class="title new-prod-title">Stage Custom</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+              <h3>Pioneer DJM-900nexus</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Pioneer DJM-900nexus2.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Pioneer</div>
+                                  <div class="title new-prod-title">DJM-900nexus</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>  
+              <h3>Pioneer DJM-900nexus</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Roland rd_700sx .jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Roland</div>
+                                  <div class="title new-prod-title">rd_700sx</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>  
+              <h3>Кабинеты</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/кабинеты/Ampeg svt-410 hlf 2.webp');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Ampeg</div>
+                                  <div class="title new-prod-title">svt-410 hlf</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                    <a href="#">
+                        <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/кабинеты/ampeg svt-810е 1.jpg');">
+                            <div class="new-prod-head">
+                                <div class="brand-in">Ampeg</div>
+                                <div class="title new-prod-title">svt-810е</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                  <a href="#">
+                      <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/кабинеты/Hartke XL 410 1.jpg.jpg');">
+                          <div class="new-prod-head">
+                              <div class="brand-in">Hartke</div>
+                              <div class="title new-prod-title">XL 410</div>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+              <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+              <a href="#">
+                  <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/кабинеты/Mesa boogie slant cabinet standard 1.jpg');">
+                      <div class="new-prod-head">
+                          <div class="brand-in">Mesa boogie</div>
+                          <div class="title new-prod-title">slant cabinet standard</div>
+                      </div>
+                  </div>
+              </a>
+              </div>
+              </div>
+              <h3>Усилители</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/Усилители/Ampeg SVT 3 pro 2.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Ampeg</div>
+                                  <div class="title new-prod-title">SVT 3 pro</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                    <a href="#">
+                        <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/Усилители/Ampeg SVT 4 pro 1.jpg');">
+                            <div class="new-prod-head">
+                                <div class="brand-in">Ampeg</div>
+                                <div class="title new-prod-title">SVT 4 pro</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                  <a href="#">
+                      <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/Усилители/Hartke HA3500.jpg');">
+                          <div class="new-prod-head">
+                              <div class="brand-in">Hartke</div>
+                              <div class="title new-prod-title">HA3500</div>
+                          </div>
+                      </div>
+                  </a>
+              </div>
+              <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+              <a href="#">
+                  <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/Усилители/Mesa boogie dual rectifier 2.jpg');">
+                      <div class="new-prod-head">
+                          <div class="brand-in">Mesa boogie</div>
+                          <div class="title new-prod-title">dual rectifier</div>
+                      </div>
+                  </div>
+              </a>
+          </div>
+              </div>
+              <h3>Fender Hot Rod</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/Fender Hot Rod 1.jpg');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Fender</div>
+                                  <div class="title new-prod-title">Hot Rod</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+              <h3>Fender Hot Rod</h3>
+              <div class="row row-flex-wrap">
+                  <!-- Карточка 1 -->
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-6 prod-col">
+                      <a href="#">
+                          <div class="s-black product-bg" style="background-image: url('img/Звук/муз\ инструменты/Комбоусилители/Fender twin reverb 1.png');">
+                              <div class="new-prod-head">
+                                  <div class="brand-in">Fender</div>
+                                  <div class="title new-prod-title">twin reverb</div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+          </section>
+                
+            </div>
+            <div class="col-lg-1 col-sm-1 none-mob"></div>
+        </div>
+    </div>
+
+</body>
+</html>
